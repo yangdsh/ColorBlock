@@ -1,4 +1,4 @@
-### Parallel Image Style Transformation
+# ColorBlock: Parallel Image Style Transformation
 This is a course project of CMU 15-618: Parallel Computer Architecture and Programming. 
 It uses CUDA accelerated K-means and OpenMP accelerated BFS to transform the image into color-block style. 
 Its image processing engine is written in C++ without using any image processing library.
