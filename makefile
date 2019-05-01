@@ -38,4 +38,4 @@ $(RDIR)/colorBlock_omp: $(PDIR)/colorBlock_omp.cpp $(UDIR)/cycletimer.cpp
 
 .PHONY: clean
 clean:
-	rm release/* image/*.bmp
+	rm -f release/* image/*.bmp
