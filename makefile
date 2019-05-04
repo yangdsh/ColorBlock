@@ -11,7 +11,7 @@ RDIR = release
 
 all: srun prun util
 
-srun: $(RDIR)/kmeans $(RDIR)/colorBlock $(RDIR)/smooth
+srun: $(RDIR)/kmeans $(RDIR)/colorBlock $(RDIR)/glassPainting
 
 util: $(RDIR)/compare_image
 
@@ -24,7 +24,7 @@ $(RDIR)/kmeans: $(SDIR)/kmeans.cpp $(UDIR)/cycletimer.cpp
 	$(cc) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 $(RDIR)/colorBlock: $(SDIR)/colorBlock.cpp $(UDIR)/cycletimer.cpp
 	$(cc) $(CFLAGS) -o $@ $^ $(LDFLAGS)
-$(RDIR)/smooth: $(SDIR)/smooth.cpp $(UDIR)/cycletimer.cpp
+$(RDIR)/glassPainting: $(SDIR)/glassPainting.cpp $(UDIR)/cycletimer.cpp
 	$(cc) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 $(RDIR)/kmeans_mpi: $(PDIR)/kmeans_mpi.cpp $(UDIR)/cycletimer.cpp

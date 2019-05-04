@@ -12,9 +12,7 @@
 #include <mpi.h>
 #include "../util/cycletimer.h"
 
-//#define RAND_MODE
 #define MASTER 0
-//#define ADVANCE
 
 using namespace std;
 
@@ -246,9 +244,13 @@ void bfs(int threshold, int width, int height, int n, char** pixels, bool* visit
 int main(int argc, char ** argv)
 {
 	int width, height;
-  char ** pixels, **pixels2;
+  char ** pixels;
+#ifdef ADVANCE
+  char **pixels2;
+  char *all_pixs2;
+#endif
   char * pixs;
-  char * all_pixs, *all_pixs2;
+  char * all_pixs;
   bool * visited;
   int * id;
   int * size;

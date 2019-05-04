@@ -262,9 +262,13 @@ void bfs(int threshold, int width, int height, int n, char** pixels, bool* visit
 int main(int argc, char ** argv)
 {
 	int width, height;
-  char ** pixels, **pixels2;
+  char ** pixels;
   char * pixs;
-  char * all_pixs, *all_pixs2;
+  char * all_pixs;
+#ifdef ADVANCE
+  char **pixels2;
+  char *all_pixs2;
+#endif
   bool * visited;
   int * id;
   int * size;

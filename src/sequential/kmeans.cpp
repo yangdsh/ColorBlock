@@ -254,6 +254,15 @@ int main(int argc, char ** argv) {
 		else
       cout << k << endl;
 	}
+  if (argc>=2) {
+    inputFile = argv[1];
+  }
+  if (argc>=3) {
+    outputFile = argv[2];
+  }
+  if (argc>=4) {
+    k=atoi(argv[3]);
+  }
   cstart = currentSeconds(); 
 	ReadBMP(inputFile, size, pixels, head);
   cend = currentSeconds();

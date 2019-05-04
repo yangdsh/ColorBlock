@@ -264,6 +264,18 @@ int main(int argc, char ** argv)
     else
 		  cout << iter << endl;
 	}
+  if (argc>=2) {
+    inputFile = argv[1];
+  }
+  if (argc>=3) {
+    outputFile = argv[2];
+  }
+  if (argc>=4) {
+    blockSize=atoi(argv[3]);
+  }
+  if (argc>=5) {
+    iter=atoi(argv[4]);
+  }
 	
   get_pic(inputFile, width, height, n, head, pixels, visited, id, size, color);
 	for (int i = 1; i <= iter; i ++) {

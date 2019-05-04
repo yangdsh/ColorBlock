@@ -60,6 +60,7 @@ int ReadBMP(string strFile, int &size,int & width, int & height , double *&pixel
 		}
 	}
 	fclose(fin);
+  return 1;
 }
 	
 int WriteBMP(string strFile, int size, double *pixels, char *head) {	
@@ -80,6 +81,7 @@ int WriteBMP(string strFile, int size, double *pixels, char *head) {
 	fclose(fout);
 
 	free(pixels);
+  return 1;
 }
 
 void conv(int size, double* weight, int WIDTH,
@@ -308,9 +310,6 @@ void edge2color(double* origin, double* input, double* output,int width,int heig
 			{
 				if(tmp[3*(j*width+i)]!=255 || tmp[3*(j*width+i)+1]!=255 || tmp[3*(j*width+i)+2]!=255)
 					continue;
-				int color1=0;
-				int color2=0;
-				int color3=0;
 				int sum_color=255*3;				
 				for(int p=max(0,i-1);p<min(width,i+2);p++){
 					for(int q=max(0,j-1);q<min(height,j+2);q++){
@@ -378,15 +377,25 @@ int main(int argc, char ** argv){
 		else
       cout << blur_size << endl;
 	}
+  if (argc>=2) {
+    inputFile = argv[1];
+  }
+  if (argc>=3) {
+    outputFile = argv[2];
+  }
+  if (argc>=4) {
+    dilate_size=atoi(argv[3]);
+  }
+  if (argc>=5) {
+    blur_size=atoi(argv[4]);
+  }
 	ReadBMP(inputFile, size,width,height, pixels, head);
   clock_t cstart=clock();
 	double *canny_output=(double *)malloc(dim*size * sizeof(double));		
 	canny(pixels,canny_output,size,width,height,5,6);
 
 	double *dilate_output=(double *)malloc(size * sizeof(double));	
-	dilate(canny_output,dilate_output,dilate_size,width,height);
-
-	double* final_output=(double *)malloc(dim*size * sizeof(double));		
+	dilate(canny_output,dilate_output,dilate_size,width,height);	
 
 	double *blur_output=(double *)malloc(size * sizeof(double));	
 	blur(dilate_output,blur_output,blur_size,width,height);

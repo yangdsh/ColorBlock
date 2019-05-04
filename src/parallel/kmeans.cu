@@ -175,7 +175,7 @@ void KMeans(uint32_t size, uint32_t k, double * pixels) {
 	double *center;
 	uint32_t *clst;
 	//uint32_t *clst_size;
-	double min_cr = 50, max_cr = 200, dis;
+	double min_cr = 50, max_cr = 200;
 	double old_sum_dis, new_sum_dis;
 	double assign_time=0;
 	double update_time=0;
