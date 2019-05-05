@@ -15,7 +15,7 @@ srun: $(RDIR)/kmeans $(RDIR)/colorBlock $(RDIR)/glassPainting
 
 util: $(RDIR)/compare_image
 
-prun: $(RDIR)/kmeans_mpi $(RDIR)/colorBlock_mpi $(RDIR)/kmeans_cuda $(RDIR)/colorBlock_omp
+prun: $(RDIR)/kmeans_mpi $(RDIR)/colorBlock_mpi $(RDIR)/glassPainting_cuda  $(RDIR)/kmeans_cuda $(RDIR)/colorBlock_omp
 
 $(RDIR)/compare_image: $(UDIR)/compare_image.cpp
 	$(cc) $(CFLAGS) -o $@ $^ $(LDFLAGS)
@@ -30,6 +30,8 @@ $(RDIR)/glassPainting: $(SDIR)/glassPainting.cpp $(UDIR)/cycletimer.cpp
 $(RDIR)/kmeans_mpi: $(PDIR)/kmeans_mpi.cpp $(UDIR)/cycletimer.cpp
 	$(MPICC) $(CFLAGS) $(OMP) -o $@ $^ $(LDFLAGS)
 $(RDIR)/kmeans_cuda: $(PDIR)/kmeans.cu $(UDIR)/cycletimer.cpp
+	nvcc -O3 -m64 --gpu-architecture compute_61 -o $@ $^
+$(RDIR)/glassPainting_cuda: $(PDIR)/glassPainting.cu $(UDIR)/cycletimer.cpp
 	nvcc -O3 -m64 --gpu-architecture compute_61 -o $@ $^
 $(RDIR)/colorBlock_mpi: $(PDIR)/colorBlock_mpi.cpp $(UDIR)/cycletimer.cpp
 	$(MPICC) $(CFLAGS) $(OMP) -o $@ $^ $(LDFLAGS)

@@ -15,7 +15,7 @@ typedef unsigned int uint32_t;
 #define THRESHOLD	(1e-2)
 #define DIM 3
 #define BLOCK_SIZE 512
-#define c_num 100
+#define c_num 50
 
 __constant__ unsigned int d_size;
 __constant__ unsigned int d_k;

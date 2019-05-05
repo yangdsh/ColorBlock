@@ -12,7 +12,10 @@
 #include <mpi.h>
 #include "../util/cycletimer.h"
 
+//#define RAND_MODE
 #define MASTER 0
+#define NUM_THREADS 16
+//#define ADVANCE
 
 using namespace std;
 
@@ -78,9 +81,9 @@ void get_pic(string strFile, int &width, int &height, int &n, int &mysize, int &
     // cout << width << ' ' << height << ' ' << avgSize << endl;
     pixels = (char **)malloc(avgSize * sizeof(char *));
 		visited = (bool *) malloc(avgSize * sizeof(bool));
-    id = (int *) malloc(avgSize * sizeof(int));
-    size = (int *) malloc(avgSize * sizeof(int));
-    color = (char **)malloc(avgSize * sizeof(char *));  
+    id = (int *) malloc(avgSize * sizeof(int) * NUM_THREADS);
+    size = (int *) malloc(avgSize * sizeof(int) * NUM_THREADS);
+    color = (char **)malloc(avgSize * sizeof(char *) * NUM_THREADS);  
 	  for (int i = 0; i < avgSize; i ++)
       pixels[i] = (char *)malloc(3 * sizeof(char));
       
@@ -105,7 +108,8 @@ void get_pic(string strFile, int &width, int &height, int &n, int &mysize, int &
 
 void update_pixels(int n, char** pixels, char** color, int *id)
 {	
-	for (int i = 0 ; i < n ; ++i) {
+	#pragma omp parallel for num_threads(NUM_THREADS)
+  for (int i = 0 ; i < n ; ++i) {
 	    for(int k = 0 ; k < 3; k ++ ) {
             pixels[i][k] = color[id[i]][k];
 	    }
@@ -144,7 +148,13 @@ void bfs(int threshold, int width, int height, int n, char** pixels, bool* visit
   ** and get the color and the size of each colorblock
   */
   height = n/width;
-  int cnt = 0;
+
+#pragma omp parallel num_threads(NUM_THREADS)
+{
+  bool * visited = (bool *) calloc(n, sizeof(bool));
+  int p = omp_get_thread_num();
+  int cnt = p*n;
+  #pragma omp for
   for (int i = 0; i < height; i ++) {
       for (int j = 0; j < width; j ++) {
           int index = i * width + j;
@@ -180,13 +190,20 @@ void bfs(int threshold, int width, int height, int n, char** pixels, bool* visit
           }
       }
   }
+}
   
 	for (int i = 0; i < height; i ++)
       for (int j = 0; j < width; j ++) 
 	        visited[i*width+j] = false;
  
   //recolor
-  cnt = 0;
+#pragma omp parallel num_threads(NUM_THREADS)
+{
+  bool * visited = (bool *) calloc(n, sizeof(bool));
+  int p = omp_get_thread_num();
+  int cnt = p*n;
+  #pragma omp for
+  
   for (int i = 0; i < height; i ++) {
       for (int j = 0; j < width; j ++) {
           int index = i * width + j;
@@ -224,7 +241,7 @@ void bfs(int threshold, int width, int height, int n, char** pixels, bool* visit
                   cnt += 1;
                   continue;
               }
-              #endif      
+              #endif
               if (size[cnt] < threshold) {
                   vector<pair<KStruct, int> > score_vec(neighbor_cnt.begin(), neighbor_cnt.end());  
         					sort(score_vec.begin(), score_vec.end(), cmp);
@@ -240,17 +257,18 @@ void bfs(int threshold, int width, int height, int n, char** pixels, bool* visit
       }
   }
 }
+}
 
 int main(int argc, char ** argv)
 {
 	int width, height;
   char ** pixels;
+  char * pixs;
+  char * all_pixs;
 #ifdef ADVANCE
   char **pixels2;
   char *all_pixs2;
 #endif
-  char * pixs;
-  char * all_pixs;
   bool * visited;
   int * id;
   int * size;
@@ -264,7 +282,7 @@ int main(int argc, char ** argv)
 	int iter = 5;
   double ctime = 0;
 	string inputFile = "kmeans.bmp";
-	string outputFile = "colorBlock_mpi.bmp";
+	string outputFile = "colorBlock_omp.bmp";
 	
   if (argc>=2) {
     inputFile = argv[1];
