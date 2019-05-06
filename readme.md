@@ -1,3 +1,4 @@
+![alt text](image/sample1.bmp)
 ![alt text](image/result1.bmp)
 # ColorBlock: Parallel Image Style Transformation
 This is a course project of CMU 15-618: Parallel Computer Architecture and Programming. 
